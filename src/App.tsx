@@ -16,9 +16,9 @@ function App() {
   //   }
   // }, [atk, location.pathname, navigate]);
   return (
-    <main className="App">
-      <Main />
-      <Suspense fallback={<div><div className="loader-wrapper">
+    
+        <main className="App">
+          <Suspense fallback={<div><div className="loader-wrapper">
         <div className="lds-dual-ring"></div>
       </div></div>}>
         <BrowserRouter>

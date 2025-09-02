@@ -1,4 +1,5 @@
-import React, { useState, useCallback } from "react";
+
+import React, { useState, useCallback, useEffect } from "react";
 import {
   Box,
   Button,
@@ -17,7 +18,9 @@ import { Controller, useForm } from "react-hook-form";
 import { z as zod } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { EnvelopeSimple, EyeIcon, EyeSlashIcon, LockSimple } from "@phosphor-icons/react";
-import {  useNavigate, useNavigation } from "react-router-dom";
+import { useAuthContext } from "../../contexts/auth-context";
+import { loginApi } from "../../services/login.service";
+import { useNavigate } from "react-router-dom";
 
 
 
@@ -30,7 +33,7 @@ const schema = zod.object({
 export type Values = zod.infer<typeof schema>;
 
 export default function LoginPage() {
-//   const auth = useAuthContext();
+  const auth = useAuthContext();
   const navigate = useNavigate();
   
   const [showPassword, setShowPassword] = useState(false);
@@ -44,29 +47,27 @@ export default function LoginPage() {
   } = useForm<Values>({ resolver: zodResolver(schema) });
 
   // Clear auth state on load
-//   useEffect(() => {
-//     auth.login(null);
-//   }, []);
+  useEffect(() => {
+    auth.login(null);
+  }, []);
 
   // ✅ Submit handler
   const onSubmit = useCallback(
     async (values: Values): Promise<void> => {
       setIsPending(true);
 
-    //   const { success, loginData, message } = await loginApi(values);
+      const { success, loginData, message } = await loginApi(values);
 
-    //   if (message) {
-    //     setError("root", { type: "server", message });
-    //     setIsPending(false);
-    //     return;
-    //   }
-
-    //   if (success) {
-    //     setIsPending(false);
-    //     // auth.login(loginData || null);
-    //     Navi("/client-engagement");
-    //   }
-      navigate("/client-engagement");
+      if (message) {
+        setError("root", { type: "server", message });
+        setIsPending(false);
+        return;
+      }
+      if (success) {
+        setIsPending(false);
+        auth.login(loginData || null);
+        navigate("/client-engagement");
+      }
     },
     []
   );
