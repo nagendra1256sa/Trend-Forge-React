@@ -66,7 +66,7 @@ export default function LoginPage() {
       if (success) {
         setIsPending(false);
         auth.login(loginData || null);
-        navigate("/client-engagement");
+        navigate("/dashboard");
       }
     },
     []

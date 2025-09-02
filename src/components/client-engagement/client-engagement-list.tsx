@@ -6,6 +6,9 @@ import Stack from "@mui/material/Stack";
 import { Card, Divider, Grid, TablePagination } from "@mui/material";
 import { ClientCards } from "../../global/cards";
 import { ClientEngagementListTable } from "./client-table";
+import PersonIcon from "@mui/icons-material/Person";
+import EventIcon from "@mui/icons-material/Event";
+import BusinessIcon from "@mui/icons-material/Business";
 
 
 
@@ -27,10 +30,12 @@ export function ClientList(): React.JSX.Element {
     const [rowsPerPage, setRowsPerPage] = useState(25);
 
     const clientData = [
-        { count: 38, text: "All time Clients" },
-        { count: 2, text: "Inactive Clients" },
-        { count: 3, text: "Total Users" },
-        { count: 5, text: "Active Projects" },
+        {
+            count: 38, text: "All time Clients", subheading: 'All-time clients', icon: <PersonIcon sx={{ color: "#1976d2" }} />},
+        { count: 2, text: "Inactive Clients", subheading: 'Inactive clients', icon: <PersonIcon sx={{ color: "#FC1904" }} /> },
+        {
+            count: 3, text: "No of Users", subheading: 'Total users', icon: <PersonIcon sx={{ color: "#5FC177" }} /> },
+        { count: 5, text: "No ofProjects", subheading: 'Active projects', icon: <BusinessIcon sx={{ color: "#6138DC" }} />},
     ];
 
       const data = [
@@ -137,7 +142,7 @@ export function ClientList(): React.JSX.Element {
                                         xs: 12,
                                     }}
                                 >
-                                    <ClientCards count={data?.count} text={data?.text} />
+                                    <ClientCards count={data?.count} header={data?.text} subheading={data?.subheading} icon={data?.icon} />
                                 </Grid>
                             ))
                         }

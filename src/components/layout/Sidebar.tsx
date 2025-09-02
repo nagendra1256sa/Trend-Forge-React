@@ -51,7 +51,7 @@ const Sidebar: FC<SidebarProps> = ({ isCollapsed, toggleSidebar }) => {
                     overflowX: "hidden",
                     whiteSpace: "nowrap",
                     boxSizing: "border-box",
-                    border: "none",
+                    // border: "none",
                 },
             }}
         >

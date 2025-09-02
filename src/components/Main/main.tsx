@@ -13,7 +13,6 @@ export default function Main({ children }: MainProps) {
         setIsCollapsed(!isCollapsed);
     };
 
-    const drawerWidth = isCollapsed ? 70 : 250; 
 
     return (
         <Box sx={{ display: "flex" }}>
@@ -26,7 +25,6 @@ export default function Main({ children }: MainProps) {
                     flexGrow: 1,
                     p: 3,
                     transition: "margin 0.3s",
-                    ml: `${drawerWidth}px`,
                 }}
             >
                 <Box sx={{ mt: 8 }}>
