@@ -1,25 +1,33 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { Suspense } from 'react';
 import './App.css';
+import { Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
+import LoginPage from './components/login/login-form';
 
 function App() {
+    const navigate = useNavigate();
+  const location = useLocation();
+  const atk = localStorage.getItem('atk')
+  // useEffect(() => {
+  //   if (atk && location.pathname !== '/login' && location.pathname !== '/') {
+  //     navigate("/menu-items"); 
+  //   } else {
+  //     navigate("/login");
+  //     localStorage.clear();
+  //   }
+  // }, [atk, location.pathname, navigate]);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+        <main className="App">
+          <Suspense fallback={<div><div className="loader-wrapper">
+        <div className="lds-dual-ring"></div>
+      </div></div>}>
+          <Routes>
+        <Route path="/" element={<Navigate to="/login" replace />} />
+            <Route path="/login" element={<LoginPage />} />
+          </Routes>
+          </Suspense>
+       
+        </main>
+    
   );
 }
 
