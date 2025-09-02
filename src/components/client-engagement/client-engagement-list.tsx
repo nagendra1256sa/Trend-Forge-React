@@ -3,7 +3,7 @@
 import React, { useState, useMemo, useEffect } from "react";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
-import { Card, Divider, Grid, TablePagination } from "@mui/material";
+import { Button, Card, Divider, Grid, TablePagination } from "@mui/material";
 import { ClientCards } from "../../global/cards";
 import { ClientEngagementListTable } from "./client-table";
 import PersonIcon from "@mui/icons-material/Person";
@@ -14,6 +14,10 @@ import BusinessIcon from "@mui/icons-material/Business";
 import GlobalFilters from "../../global/filters";
 import { getClientEngagements } from "../../services/client-engagement";
 import { Organization } from "../../models/client-engagement";
+import { HeaderTile } from "../../global/header-title";
+import AddIcon from "@mui/icons-material/Add";
+import EditClientEngagement from "./edit-client-engagement";
+import { Actions } from "../../constants/client-engagement.constants";
 
 
 // const applyFilters = (rows: MenuItem[], { name, sku }: MenuItemFilters): MenuItem[] => {
@@ -39,35 +43,38 @@ export function ClientList(): React.JSX.Element {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
+
     const clientData = [
         {
-            count: 38, text: "All time Clients", subheading: 'All-time clients', icon: <PersonIcon sx={{ color: "#1976d2" }} />},
+            count: 38, text: "All time Clients", subheading: 'All-time clients', icon: <PersonIcon sx={{ color: "#1976d2" }} />
+        },
         { count: 2, text: "Inactive Clients", subheading: 'Inactive clients', icon: <PersonIcon sx={{ color: "#FC1904" }} /> },
         {
-            count: 3, text: "No of Users", subheading: 'Total users', icon: <PersonIcon sx={{ color: "#5FC177" }} /> },
-        { count: 5, text: "No ofProjects", subheading: 'Active projects', icon: <BusinessIcon sx={{ color: "#6138DC" }} />},
+            count: 3, text: "No of Users", subheading: 'Total users', icon: <PersonIcon sx={{ color: "#5FC177" }} />
+        },
+        { count: 5, text: "No ofProjects", subheading: 'Active projects', icon: <BusinessIcon sx={{ color: "#6138DC" }} /> },
     ];
 
     useEffect(() => {
-       getOrgansations();
-    },[]);
+        getOrgansations();
+    }, []);
 
-    const getOrgansations = async (): Promise<void>  => {
-         try {
+    const getOrgansations = async (): Promise<void> => {
+        try {
             setLoading(true);
             const response = await getClientEngagements();
-            if(response?.success) {
-             setOrganizations(response?.organizations ? response?.organizations : []);
+            if (response?.success) {
+                setOrganizations(response?.organizations ? response?.organizations : []);
             }
             else {
                 setOrganizations([]);
             }
-         } catch(error) {
-            setOrganizations([]); 
+        } catch (error) {
+            setOrganizations([]);
             setError('Oops something went wrong...!');
-         } finally {
+        } finally {
             setLoading(false);
-         }
+        }
     }
 
     const data = [
@@ -144,12 +151,19 @@ export function ClientList(): React.JSX.Element {
         const endIndex = startIndex + rowsPerPage;
         return data.slice(startIndex, endIndex);
     }, [page, rowsPerPage]);
-
-
-
+    const heading = "Client Engagement";
+    const subHeading = "Manage client relationships,renewals, and consultant assignments following the TechFlow workflow";
     return (
         <>
             {/* {loading && <FallbackLoader />} */}
+            <Box sx={{ display: 'flex', flexDirection: 'row',justifyContent:'space-between' }}>
+                <Box>
+                <HeaderTile title={heading} subtitle={subHeading} />
+                </Box>
+                <Button variant="contained" sx={{height:'40px'}}>
+                    <AddIcon /> Add Client
+                </Button>
+            </Box>
             <Box
                 sx={{
                     maxWidth: "var(--Content-maxWidth)",
@@ -182,13 +196,14 @@ export function ClientList(): React.JSX.Element {
                     <Card>
                         <Divider />
                         <Box>
-                            <Box sx={{ p: 2, display: "flex",
-                                 justifyContent: "flex-end", 
-                                 alignItems: "center", 
-                                 flexWrap: "wrap", 
-                                 gap: 2,
-                                 
-                                 }}>
+                            <Box sx={{
+                                p: 2, display: "flex",
+                                justifyContent: "flex-end",
+                                alignItems: "center",
+                                flexWrap: "wrap",
+                                gap: 2,
+
+                            }}>
                                 <GlobalFilters
                                     search={search}
                                     onSearch={setSearch}
@@ -227,6 +242,7 @@ export function ClientList(): React.JSX.Element {
                     </Card>
                 </Stack>
             </Box>
+
         </>
     );
 }
