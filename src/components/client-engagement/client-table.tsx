@@ -12,8 +12,9 @@ import { MoreVert as MoreVertIcon } from "@mui/icons-material";
 import { ColumnDef, DataTable } from "../../global/table";
 import EditClientEngagement from "./edit-client-engagement";
 import { Actions } from "../../constants/client-engagement.constants";
+import { Organization } from "../../models/client-engagement";
 
-const ActionMenu: React.FC<any> = ({ row }) => {
+const ActionMenu: React.FC<any> = ({ row } ) => {
   const anchorRef = useRef<HTMLButtonElement>(null);
   const [open, setOpen] = useState(false);
   const [openDialog, setOpenDialog] = useState({
@@ -65,7 +66,7 @@ const ActionMenu: React.FC<any> = ({ row }) => {
       </Menu>
     </Box>
      {
-       openDialog?.name ===  Actions.EDIT && <EditClientEngagement open={openDialog?.status} close={() => setOpenDialog({
+       openDialog?.name ===  Actions.EDIT && <EditClientEngagement open={openDialog?.status} organizationDetails={row} close={() => setOpenDialog({
         name: "",
         status : false
        })}/>
@@ -78,29 +79,29 @@ const columns = [
   {
     name: "Client ID",
     width: "auto",
-    formatter: (row: any) => (
+    formatter: (row) => (
       <Typography sx={{ whiteSpace: "nowrap" }}>{row?.clientId ?? "-"}</Typography>
     ),
   },
   {
     name: "Organization Name",
     width: "auto",
-    formatter: (row: any) => (
-      <Typography sx={{ whiteSpace: "normal" }}>{row?.organization ?? "-"}</Typography>
+    formatter: (row) => (
+      <Typography sx={{ whiteSpace: "normal" }}>{row?.name ?? "-"}</Typography>
     ),
   },
   {
     name: "Contact Person",
     width: "auto",
-    formatter: (row: any) => (
+    formatter: (row) => (
       <Typography sx={{ whiteSpace: "nowrap" }}>{row?.contactPerson ?? "-"}</Typography>
     ),
   },
   {
     name: "Assigned Consultant",
     width: "auto",
-    formatter: (row: any) => (
-      <Typography sx={{ whiteSpace: "nowrap" }}>{row?.assignedTo ?? "-"}</Typography>
+    formatter: (row) => (
+      <Typography sx={{ whiteSpace: "nowrap" }}>{row?.contactPerson ?? "-"}</Typography>
     ),
   },
   {
@@ -126,7 +127,7 @@ const columns = [
       <ActionMenu row={row} />
     ),
   },
-] satisfies ColumnDef<any>[];
+] satisfies ColumnDef<Organization>[];
 
 export function ClientEngagementListTable({ rows }: any) {
   return (

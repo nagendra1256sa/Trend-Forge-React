@@ -7,7 +7,6 @@ import { Button, Card, Divider, Grid, TablePagination } from "@mui/material";
 import { ClientCards } from "../../global/cards";
 import { ClientEngagementListTable } from "./client-table";
 import PersonIcon from "@mui/icons-material/Person";
-import EventIcon from "@mui/icons-material/Event";
 import BusinessIcon from "@mui/icons-material/Business";
 
 
@@ -17,7 +16,6 @@ import { ClientStats, Organization } from "../../models/client-engagement";
 import { HeaderTile } from "../../global/header-title";
 import AddIcon from "@mui/icons-material/Add";
 import EditClientEngagement from "./edit-client-engagement";
-import { Actions } from "../../constants/client-engagement.constants";
 
 
 // const applyFilters = (rows: MenuItem[], { name, sku }: MenuItemFilters): MenuItem[] => {
@@ -43,6 +41,7 @@ export function ClientList(): React.JSX.Element {
     const [clientStats, setClientStats] = useState<ClientStats>();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [openDialog, setOpenDialog] = useState<boolean>(false);
 
     useEffect(() => {
         getClientStats();
@@ -173,6 +172,7 @@ export function ClientList(): React.JSX.Element {
         const endIndex = startIndex + rowsPerPage;
         return data.slice(startIndex, endIndex);
     }, [page, rowsPerPage]);
+
     const heading = "Client Engagement";
     const subHeading = "Manage client relationships,renewals, and consultant assignments following the TechFlow workflow";
     return (
@@ -182,7 +182,7 @@ export function ClientList(): React.JSX.Element {
                 <Box>
                 <HeaderTile title={heading} subtitle={subHeading} />
                 </Box>
-                <Button variant="contained" sx={{height:'40px'}}>
+                <Button variant="contained" sx={{height:'40px'}} onClick={() => setOpenDialog(true)}>
                     <AddIcon /> Add Client
                 </Button>
             </Box>
@@ -259,7 +259,9 @@ export function ClientList(): React.JSX.Element {
                     </Card>
                 </Stack>
             </Box>
-
+            {
+                openDialog && <EditClientEngagement open={openDialog} close={() => setOpenDialog(false)}/>
+            }
         </>
     );
 }

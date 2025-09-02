@@ -15,9 +15,11 @@ import React from "react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as zod from "zod";
+import { Organization } from "../../models/client-engagement";
 export interface EditClientEngagementProps {
   open: boolean;
   close: () => void;
+  organizationDetails?: Organization
 }
 
 const schema = zod.object({
@@ -53,7 +55,7 @@ const fields: { label: string; name: keyof EditClientValues; required?: boolean 
   { label: "Email", name: "email", required: true },
 ];
 
-const EditClientEngagement: React.FC<EditClientEngagementProps> = ({ open, close }) => {
+const EditClientEngagement: React.FC<EditClientEngagementProps> = ({ open, close, organizationDetails }) => {
   const {
     control,
     handleSubmit,
@@ -94,10 +96,12 @@ const EditClientEngagement: React.FC<EditClientEngagementProps> = ({ open, close
             <Stack direction="row" justifyContent="space-between" alignItems="center">
               <Box >
                 <Stack direction="row" alignItems="center" >
-                  <Typography variant="h6" sx={{fontWeight:'700'}}>Edit Client</Typography>
-                  <Typography variant="body2" ml={1} color="text.secondary">
+                  <Typography variant="h6" sx={{fontWeight:'700'}}>{organizationDetails ? "Edit Client": "Add Client"}</Typography>
+                  {
+                    organizationDetails &&  <Typography variant="body2" ml={1} color="text.secondary">
                     - TC002
                   </Typography>
+                  }
                 </Stack>
                 <Typography variant="body2" color="text.secondary">
                   Update the client details to add them to the directory
