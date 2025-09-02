@@ -3,7 +3,7 @@
 import React, { useState, useMemo, useEffect } from "react";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
-import { Card, Divider, Grid, TablePagination } from "@mui/material";
+import { Button, Card, Divider, Grid, TablePagination } from "@mui/material";
 import { ClientCards } from "../../global/cards";
 import { ClientEngagementListTable } from "./client-table";
 import PersonIcon from "@mui/icons-material/Person";
@@ -14,6 +14,10 @@ import BusinessIcon from "@mui/icons-material/Business";
 import GlobalFilters from "../../global/filters";
 import { getClientEngagements, getWidgetsList } from "../../services/client-engagement";
 import { ClientStats, Organization } from "../../models/client-engagement";
+import { HeaderTile } from "../../global/header-title";
+import AddIcon from "@mui/icons-material/Add";
+import EditClientEngagement from "./edit-client-engagement";
+import { Actions } from "../../constants/client-engagement.constants";
 
 
 // const applyFilters = (rows: MenuItem[], { name, sku }: MenuItemFilters): MenuItem[] => {
@@ -169,11 +173,19 @@ export function ClientList(): React.JSX.Element {
         const endIndex = startIndex + rowsPerPage;
         return data.slice(startIndex, endIndex);
     }, [page, rowsPerPage]);
-
-
+    const heading = "Client Engagement";
+    const subHeading = "Manage client relationships,renewals, and consultant assignments following the TechFlow workflow";
     return (
         <>
             {/* {loading && <FallbackLoader />} */}
+            <Box sx={{ display: 'flex', flexDirection: 'row',justifyContent:'space-between' }}>
+                <Box>
+                <HeaderTile title={heading} subtitle={subHeading} />
+                </Box>
+                <Button variant="contained" sx={{height:'40px'}}>
+                    <AddIcon /> Add Client
+                </Button>
+            </Box>
             <Box
                 sx={{
                     maxWidth: "var(--Content-maxWidth)",
@@ -247,6 +259,7 @@ export function ClientList(): React.JSX.Element {
                     </Card>
                 </Stack>
             </Box>
+
         </>
     );
 }

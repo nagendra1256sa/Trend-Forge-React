@@ -36,10 +36,13 @@ const schema = zod.object({
 
 export type EditClientValues = zod.infer<typeof schema>;
 
-const fields: { label: string; name: keyof EditClientValues; required?: boolean }[] = [
-  { label: "Organization Name", name: "organizationName", required: true },
+// Multi-line text fields (textarea)
+const orgAddresses: { label: string; name: keyof EditClientValues; required?: boolean }[] = [
   { label: "Organization Address 1", name: "organizationAddress1", required: true },
   { label: "Organization Address 2", name: "organizationAddress2" },
+];
+
+const fields: { label: string; name: keyof EditClientValues; required?: boolean }[] = [
   { label: "Country", name: "country", required: true },
   { label: "State", name: "state", required: true },
   { label: "Zip Code", name: "zipCode", required: true },
@@ -68,13 +71,17 @@ const EditClientEngagement: React.FC<EditClientEngagementProps> = ({ open, close
   return (
     <Modal open={open} onClose={close} aria-labelledby="edit-client-title" >
       <Container
-      maxWidth="sm"
-        sx={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100vh" }}
+        // maxWidth="sm"
+        sx={{
+          width: '750px',
+          display: "flex", alignItems: "center", justifyContent: "center", height: "100vh"
+        }}
       >
         <Paper
           sx={{
             width: "100%",
-            maxHeight: "90vh",
+            // maxHeight: "90vh",
+            height: '500px',
             borderRadius: 2,
             boxShadow: 6,
             outline: "none",
@@ -83,12 +90,19 @@ const EditClientEngagement: React.FC<EditClientEngagementProps> = ({ open, close
           }}
         >
           {/* Header */}
-          <Box sx={{ p: 3, pb: 0, flexShrink: 0 }}>
+          <Box sx={{ p: 3, pb: 1, flexShrink: 0, }}>
             <Stack direction="row" justifyContent="space-between" alignItems="center">
-              <Typography variant="h6">Edit Client</Typography>
-              <Typography variant="body2" color="text.secondary">
-                - TC002
-              </Typography>
+              <Box >
+                <Stack direction="row" alignItems="center" >
+                  <Typography variant="h6" sx={{fontWeight:'700'}}>Edit Client</Typography>
+                  <Typography variant="body2" ml={1} color="text.secondary">
+                    - TC002
+                  </Typography>
+                </Stack>
+                <Typography variant="body2" color="text.secondary">
+                  Update the client details to add them to the directory
+                </Typography>
+              </Box>
               <IconButton onClick={close}>
                 <XIcon />
               </IconButton>
@@ -96,11 +110,58 @@ const EditClientEngagement: React.FC<EditClientEngagementProps> = ({ open, close
           </Box>
 
           {/* Form */}
-          <Box sx={{ flex: 1, overflow: "auto", px: 3, py: 2 }}>
-            <form id="edit-client-form" onSubmit={handleSubmit(onSubmit)}>
-                  <Grid container spacing={3}>
+          <Box sx={{ flex: 1, overflow: "auto", px: 3, py: 2, }}>
+            <form id="edit-client-form" onSubmit={handleSubmit(onSubmit)} style={{ width: '100%' }}>
+              <Grid container spacing={3} sx={{ width: '100%' }}>
+                <Grid size={{ xs: 12 }}>
+                    <Controller
+                      name="organizationName"
+                      control={control}
+                      render={({ field }) => (
+                        <TextField
+                          {...field}
+                          fullWidth
+                          label={
+                            <>
+                              Organization Name<span style={{ color: "red" }}> *</span>
+                            </>
+                          }
+                          error={!!errors.organizationName}
+                          helperText={errors.organizationName?.message?.toString()}
+                        />
+                      )}
+                    />
+                  </Grid>
+              </Grid>
+              <Grid container spacing={3} mt={2} sx={{ width: '100%' }}>
+                {orgAddresses?.map(({ label, name, required }) => (
+                  <Grid key={name} mt={2} size={{ xs: 6 }}>
+                    <Controller
+                      name={name}
+                      control={control}
+                      render={({ field }) => (
+                        <TextField
+                          {...field}
+                          fullWidth
+                          multiline
+                          minRows={3}
+                          label={
+                            <>
+                              {label}
+                              {required && <span style={{ color: "red" }}> *</span>}
+                            </>
+                          }
+                          error={!!errors[name]}
+                          helperText={errors[name]?.message?.toString()}
+                        />
+                      )}
+                    />
+                  </Grid>
+                ))}
+              </Grid>
+              <Grid container spacing={3} mt={2} sx={{ width: '100%' }}>
                 {fields.map(({ label, name, required }) => (
-                  <Grid  key={name}>
+                  <Grid key={name} size={{ xs: 6 }} >
                     <Controller
                       name={name}
                       control={control}
@@ -122,9 +183,9 @@ const EditClientEngagement: React.FC<EditClientEngagementProps> = ({ open, close
                   </Grid>
                 ))}
               </Grid>
-              <Grid container spacing={3}>
+              <Grid container spacing={3} mt={2}>
                 {fields.map(({ label, name, required }) => (
-                  <Grid  key={name}>
+                  <Grid key={name} size={{ xs: 6 }}>
                     <Controller
                       name={name}
                       control={control}
@@ -167,3 +228,4 @@ const EditClientEngagement: React.FC<EditClientEngagementProps> = ({ open, close
 };
 
 export default EditClientEngagement;
+
