@@ -10,16 +10,29 @@ import {
 } from "@mui/material";
 import { MoreVert as MoreVertIcon } from "@mui/icons-material";
 import { ColumnDef, DataTable } from "../../global/table";
+import EditClientEngagement from "./edit-client-engagement";
+import { Actions } from "../../constants/client-engagement.constants";
 
-const ActionMenu: React.FC<any> = ({ row, isAssigned }) => {
+const ActionMenu: React.FC<any> = ({ row }) => {
   const anchorRef = useRef<HTMLButtonElement>(null);
   const [open, setOpen] = useState(false);
+  const [openDialog, setOpenDialog] = useState({
+    name : "",
+    status : false,
+  });
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
+  const handleOpenDialog = (name: string, status : boolean) => {
+     setOpenDialog({
+      name: name,
+      status: status
+     })
+  };
+
   return (
-    <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
+    <><Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
       <Button
         variant="outlined"
         color="error"
@@ -46,13 +59,18 @@ const ActionMenu: React.FC<any> = ({ row, isAssigned }) => {
         transformOrigin={{ vertical: "top", horizontal: "right" }}
         slotProps={{ paper: { sx: { width: "200px" } } }}
       >
-        <MenuItem onClick={handleClose}>View</MenuItem>
-        <MenuItem onClick={handleClose}>Edit</MenuItem>
-        {isAssigned && (
-          <MenuItem onClick={handleClose}>Unassign Consultant</MenuItem>
-        )}
+        <MenuItem onClick={() => { handleOpenDialog(Actions.VIEW, true); handleClose(); } }>View</MenuItem>
+        <MenuItem onClick={() => { handleOpenDialog(Actions.EDIT, true); handleClose(); } }>Edit</MenuItem>
+        <MenuItem onClick={() => { handleOpenDialog(Actions.VIEW, true); handleClose(); } }>Unassign Consultant</MenuItem>
       </Menu>
     </Box>
+     {
+       openDialog?.name ===  Actions.EDIT && <EditClientEngagement open={openDialog?.status} close={() => setOpenDialog({
+        name: "",
+        status : false
+       })}/>
+     }
+    </>
   );
 };
 
@@ -105,7 +123,7 @@ const columns = [
     name: "Actions",
     width: "auto",
     formatter: (row: any) => (
-      <ActionMenu row={row} isAssigned={!!row?.assignedTo} />
+      <ActionMenu row={row} />
     ),
   },
 ] satisfies ColumnDef<any>[];

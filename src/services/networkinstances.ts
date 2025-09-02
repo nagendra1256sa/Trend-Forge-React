@@ -3,7 +3,7 @@ import axios from "axios";
 
 
 export const axiosInstances = axios.create({
-   baseURL: process.env.NEXT_PUBLIC_APP_URL,
+  baseURL: process.env.REACT_APP_NETWORK_INSTANCE_BASE_URL,
     headers: {
     'Content-Type': 'application/json',
     'Access-Control-Allow-Credentials': '*',

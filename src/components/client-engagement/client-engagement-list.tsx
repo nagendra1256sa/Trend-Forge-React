@@ -1,14 +1,14 @@
 'use client'
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import { Card, Divider, Grid, TablePagination } from "@mui/material";
 import { ClientCards } from "../../global/cards";
 import { ClientEngagementListTable } from "./client-table";
 import GlobalFilters from "../../global/filters";
-
-
+import { getClientEngagements } from "../../services/client-engagement";
+import { Organization } from "../../models/client-engagement";
 
 
 // const applyFilters = (rows: MenuItem[], { name, sku }: MenuItemFilters): MenuItem[] => {
@@ -30,6 +30,9 @@ export function ClientList(): React.JSX.Element {
     const [organization, setOrganization] = useState("");
     const [status, setStatus] = useState("");
     const [exportType, setExportType] = useState("");
+    const [organizations, setOrganizations] = useState<Organization[]>([]);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
 
     const clientData = [
         { count: 38, text: "All time Clients" },
@@ -37,6 +40,28 @@ export function ClientList(): React.JSX.Element {
         { count: 3, text: "Total Users" },
         { count: 5, text: "Active Projects" },
     ];
+
+    useEffect(() => {
+       getOrgansations();
+    },[]);
+
+    const getOrgansations = async (): Promise<void>  => {
+         try {
+            setLoading(true);
+            const response = await getClientEngagements();
+            if(response?.success) {
+             setOrganizations(response?.organizations ? response?.organizations : []);
+            }
+            else {
+                setOrganizations([]);
+            }
+         } catch(error) {
+            setOrganizations([]); 
+            setError('Oops something went wrong...!');
+         } finally {
+            setLoading(false);
+         }
+    }
 
     const data = [
         {
@@ -113,18 +138,7 @@ export function ClientList(): React.JSX.Element {
         return data.slice(startIndex, endIndex);
     }, [page, rowsPerPage]);
 
-    // useEffect(() => {
-    //     setHeaderTitle(t("menuItem:menu_items"));
-    //     if (err) {
-    //         toast.error('Oops something went wrong...!');
-    //     }
-    //     if (menuItem) {
-    //         const index = menuDetails?.findIndex(item => item?.id === menuItem?.id);
-    //         if (index !== undefined && index >= 0) {
-    //             menuDetails?.splice(index, 1, menuItem);
-    //         }
-    //     }
-    // }, [err, menuItem, menuDetails]);
+
 
     return (
         <>

@@ -31,7 +31,6 @@ function App() {
           </Suspense>
        
         </main>
-    
   );
 }
 
