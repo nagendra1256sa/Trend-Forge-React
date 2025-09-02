@@ -2,6 +2,8 @@ import React, { Suspense } from 'react';
 import './App.css';
 import { BrowserRouter, Navigate, Route, Routes, } from 'react-router-dom';
 import LoginPage from './components/login/login-form';
+import Header from './components/layout/Header';
+import Main from './components/Main/main';
 
 function App() {
   const atk = localStorage.getItem('atk')
@@ -14,20 +16,21 @@ function App() {
   //   }
   // }, [atk, location.pathname, navigate]);
   return (
-        <main className="App">
-          <Suspense fallback={<div><div className="loader-wrapper">
+    <main className="App">
+      <Main />
+      <Suspense fallback={<div><div className="loader-wrapper">
         <div className="lds-dual-ring"></div>
       </div></div>}>
         <BrowserRouter>
-          <Routes>
+          {/* <Routes>
         <Route path="/" element={<Navigate to="/login" replace />} />
             <Route path="/login" element={<LoginPage />} />
-          </Routes>
+          </Routes> */}
         </BrowserRouter>
-          </Suspense>
-       
-        </main>
-    
+      </Suspense>
+
+    </main>
+
   );
 }
 

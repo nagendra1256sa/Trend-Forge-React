@@ -17,6 +17,7 @@ import { Controller, useForm } from "react-hook-form";
 import { z as zod } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { EnvelopeSimple, EyeIcon, EyeSlashIcon, LockSimple } from "@phosphor-icons/react";
+import {  useNavigate, useNavigation } from "react-router-dom";
 
 
 
@@ -30,6 +31,7 @@ export type Values = zod.infer<typeof schema>;
 
 export default function LoginPage() {
 //   const auth = useAuthContext();
+  const navigate = useNavigate();
   
   const [showPassword, setShowPassword] = useState(false);
   const [isPending, setIsPending] = useState(false);
@@ -64,6 +66,7 @@ export default function LoginPage() {
     //     // auth.login(loginData || null);
     //     Navi("/client-engagement");
     //   }
+      navigate("/client-engagement");
     },
     []
   );
