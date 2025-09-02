@@ -24,7 +24,6 @@ import { useNavigate } from "react-router-dom";
 
 
 
-// ✅ Validation schema
 const schema = zod.object({
   email: zod.string().min(1, { message: "Email is required" }).email(),
   password: zod.string().min(1, { message: "Password is required" }),

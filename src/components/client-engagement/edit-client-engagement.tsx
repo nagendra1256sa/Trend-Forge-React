@@ -37,6 +37,7 @@ const schema = zod.object({
 export type EditClientValues = zod.infer<typeof schema>;
 
 const fields: { label: string; name: keyof EditClientValues; required?: boolean }[] = [
+  { label: "Organization Name", name: "organizationName", required: true },
   { label: "Organization Address 1", name: "organizationAddress1", required: true },
   { label: "Organization Address 2", name: "organizationAddress2" },
   { label: "Country", name: "country", required: true },
@@ -94,8 +95,59 @@ const EditClientEngagement: React.FC<EditClientEngagementProps> = ({ open, close
             </Stack>
           </Box>
 
-      
-        
+          {/* Form */}
+          <Box sx={{ flex: 1, overflow: "auto", px: 3, py: 2 }}>
+            <form id="edit-client-form" onSubmit={handleSubmit(onSubmit)}>
+                  <Grid container spacing={3}>
+                {fields.map(({ label, name, required }) => (
+                  <Grid  key={name}>
+                    <Controller
+                      name={name}
+                      control={control}
+                      render={({ field }) => (
+                        <TextField
+                          {...field}
+                          fullWidth
+                          label={
+                            <>
+                              {label}
+                              {required && <span style={{ color: "red" }}> *</span>}
+                            </>
+                          }
+                          error={!!errors[name]}
+                          helperText={errors[name]?.message?.toString()}
+                        />
+                      )}
+                    />
+                  </Grid>
+                ))}
+              </Grid>
+              <Grid container spacing={3}>
+                {fields.map(({ label, name, required }) => (
+                  <Grid  key={name}>
+                    <Controller
+                      name={name}
+                      control={control}
+                      render={({ field }) => (
+                        <TextField
+                          {...field}
+                          fullWidth
+                          label={
+                            <>
+                              {label}
+                              {required && <span style={{ color: "red" }}> *</span>}
+                            </>
+                          }
+                          error={!!errors[name]}
+                          helperText={errors[name]?.message?.toString()}
+                        />
+                      )}
+                    />
+                  </Grid>
+                ))}
+              </Grid>
+            </form>
+          </Box>
 
           {/* Footer */}
           <Box sx={{ p: 3, pt: 2, flexShrink: 0, borderTop: 1, borderColor: "divider" }}>

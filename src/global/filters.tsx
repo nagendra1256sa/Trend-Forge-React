@@ -65,6 +65,7 @@ const GlobalFilters: React.FC<GlobalFiltersProps> = ({
           label="Organizations"
           onChange={(e) => onOrgChange(e.target.value)}
         >
+          <MenuItem>Show All</MenuItem>
           {organizations.map((org) => (
             <MenuItem key={org} value={org}>
               {org}
@@ -80,6 +81,7 @@ const GlobalFilters: React.FC<GlobalFiltersProps> = ({
           label="Status"
           onChange={(e) => onStatusChange(e.target.value)}
         >
+          <MenuItem>Show all</MenuItem>
           {statuses.map((st) => (
             <MenuItem key={st} value={st}>
               {st}

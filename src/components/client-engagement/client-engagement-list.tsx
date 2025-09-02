@@ -12,8 +12,8 @@ import BusinessIcon from "@mui/icons-material/Business";
 
 
 import GlobalFilters from "../../global/filters";
-import { getClientEngagements } from "../../services/client-engagement";
-import { Organization } from "../../models/client-engagement";
+import { getClientEngagements, getWidgetsList } from "../../services/client-engagement";
+import { ClientStats, Organization } from "../../models/client-engagement";
 
 
 // const applyFilters = (rows: MenuItem[], { name, sku }: MenuItemFilters): MenuItem[] => {
@@ -35,39 +35,75 @@ export function ClientList(): React.JSX.Element {
     const [organization, setOrganization] = useState("");
     const [status, setStatus] = useState("");
     const [exportType, setExportType] = useState("");
-    const [organizations, setOrganizations] = useState<Organization[]>([]);
+    const [organizations, setOrganizations] = useState<Organization[]>([])
+    const [clientStats, setClientStats] = useState<ClientStats>();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    const clientData = [
-        {
-            count: 38, text: "All time Clients", subheading: 'All-time clients', icon: <PersonIcon sx={{ color: "#1976d2" }} />},
-        { count: 2, text: "Inactive Clients", subheading: 'Inactive clients', icon: <PersonIcon sx={{ color: "#FC1904" }} /> },
-        {
-            count: 3, text: "No of Users", subheading: 'Total users', icon: <PersonIcon sx={{ color: "#5FC177" }} /> },
-        { count: 5, text: "No ofProjects", subheading: 'Active projects', icon: <BusinessIcon sx={{ color: "#6138DC" }} />},
-    ];
+    useEffect(() => {
+        getClientStats();
+        getOrgansations();
+    }, []);
 
     useEffect(() => {
-       getOrgansations();
-    },[]);
+        const handler = setTimeout(() => {
+            if (search || organization || status) {
+                getOrgansations();
+            }
+        }, 500);
 
-    const getOrgansations = async (): Promise<void>  => {
-         try {
+        return () => {
+            clearTimeout(handler);
+        };
+    }, [search, organization, status]);
+
+
+
+    const getOrgansations = async (): Promise<void> => {
+        try {
             setLoading(true);
-            const response = await getClientEngagements();
-            if(response?.success) {
-             setOrganizations(response?.organizations ? response?.organizations : []);
+            const response = await getClientEngagements(search, organization, status);
+            if (response?.success) {
+                setOrganizations(response?.organizations ? response?.organizations : []);
             }
             else {
                 setOrganizations([]);
             }
-         } catch(error) {
-            setOrganizations([]); 
+        } catch (error) {
+            setOrganizations([]);
             setError('Oops something went wrong...!');
-         } finally {
+        } finally {
             setLoading(false);
-         }
+        }
+    };
+
+    const clientData = [
+        {
+            count: clientStats?.allTimeClients ?? 0, text: "TotalClients", subheading: 'All-time clients', icon: <PersonIcon sx={{ color: "#1976d2" }} />
+        },
+        { count: clientStats?.inactiveClients ?? 0, text: "Inactive Clients", subheading: 'Inactive clients', icon: <PersonIcon sx={{ color: "#FC1904" }} /> },
+        {
+            count: clientStats?.totalUsers ?? 0, text: "No of Users", subheading: 'Total users', icon: <PersonIcon sx={{ color: "#5FC177" }} />
+        },
+        { count: clientStats?.activeProjects ?? 0, text: "No ofProjects", subheading: 'Active projects', icon: <BusinessIcon sx={{ color: "#6138DC" }} /> },
+    ];
+
+    const getClientStats = async (): Promise<void> => {
+        try {
+            setLoading(true);
+            const response = await getWidgetsList();
+            if (response?.success) {
+                setClientStats(response?.clientStats)
+            }
+            else {
+                setOrganizations([]);
+            }
+        } catch (error) {
+            setOrganizations([]);
+            setError('Oops something went wrong...!');
+        } finally {
+            setLoading(false);
+        }
     }
 
     const data = [
@@ -127,24 +163,12 @@ export function ClientList(): React.JSX.Element {
         setPage(0);
     };
 
-    const filteredRows = data.filter((row) => {
-        const matchesSearch =
-            row.clientId.toLowerCase().includes(search.toLowerCase()) ||
-            row.organization.toLowerCase().includes(search.toLowerCase());
-        const matchesOrg =
-            organization === "all" || row.organization === organization;
-        const matchesStatus =
-            status === "all" || row.status.toLowerCase() === status.toLowerCase();
-        return matchesSearch && matchesOrg && matchesStatus;
-    });
-
     const paginatedData = useMemo(() => {
         if (!data) return [];
         const startIndex = page * rowsPerPage;
         const endIndex = startIndex + rowsPerPage;
         return data.slice(startIndex, endIndex);
     }, [page, rowsPerPage]);
-
 
 
     return (
@@ -177,18 +201,16 @@ export function ClientList(): React.JSX.Element {
                             ))
                         }
                     </Grid>
-
-
                     <Card>
                         <Divider />
                         <Box>
-                            <Box sx={{ p: 2, display: "flex",
-                                 justifyContent: "flex-end", 
-                                 alignItems: "center", 
-                                 flexWrap: "wrap", 
-                                 gap: 2,
-                                 
-                                 }}>
+                            <Box sx={{
+                                p: 2, display: "flex",
+                                justifyContent: "flex-end",
+                                alignItems: "center",
+                                flexWrap: "wrap",
+                                gap: 2,
+                            }}>
                                 <GlobalFilters
                                     search={search}
                                     onSearch={setSearch}
@@ -205,13 +227,12 @@ export function ClientList(): React.JSX.Element {
                                     statuses={["Active", "Inactive"]}
                                     onStatusChange={setStatus}
                                     exportType={exportType}
-                                    exportOptions={["CSV", "Excel", "PDF"]}
+                                    exportOptions={["CSV", "Excel"]}
                                     onExport={setExportType}
                                     searchPlaceholder="Search by client name/ ID"
                                 />
                             </Box>
                             <ClientEngagementListTable rows={paginatedData} />
-
                             <TablePagination
                                 component="div"
                                 count={data?.length || 0}
@@ -221,7 +242,6 @@ export function ClientList(): React.JSX.Element {
                                 rowsPerPage={rowsPerPage}
                                 rowsPerPageOptions={[25, 50, 100]}
                             />
-
                         </Box>
                         <Divider />
                     </Card>

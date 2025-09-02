@@ -4,7 +4,7 @@ export interface Organization {
   id: number;
   clientId: string;          
   name: string;              
-  contactPerson: string;     
+  contactPerson?: string;     
   contactNo: string;
   email: string;             
   address: string;           
@@ -46,5 +46,24 @@ export class OrganizationAdapter implements Adapter<Organization> {
     };
   }
 };
+
+
+export interface ClientStats {
+  allTimeClients: number;
+  inactiveClients: number;
+  totalUsers: number;
+  activeProjects: number;
+};
+
+export class ClientStatsAdapter implements Adapter<ClientStats> {
+  adapt(data: any): ClientStats {
+    return {
+      allTimeClients: data.all_time_clients ?? 0,
+      inactiveClients: data.inactive_clients ?? 0,
+      totalUsers: data.total_users ?? 0,
+      activeProjects: data.active_projects ?? 0,
+    };
+  }
+}
 
 
