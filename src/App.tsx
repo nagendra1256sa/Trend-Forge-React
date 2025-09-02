@@ -19,12 +19,10 @@ function App() {
           <Suspense fallback={<div><div className="loader-wrapper">
         <div className="lds-dual-ring"></div>
       </div></div>}>
-        <BrowserRouter>
           <Routes>
         <Route path="/" element={<Navigate to="/login" replace />} />
             <Route path="/login" element={<LoginPage />} />
           </Routes>
-        </BrowserRouter>
           </Suspense>
        
         </main>
