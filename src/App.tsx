@@ -1,11 +1,9 @@
 import React, { Suspense } from 'react';
 import './App.css';
-import { Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
+import { BrowserRouter, Navigate, Route, Routes, } from 'react-router-dom';
 import LoginPage from './components/login/login-form';
 
 function App() {
-    const navigate = useNavigate();
-  const location = useLocation();
   const atk = localStorage.getItem('atk')
   // useEffect(() => {
   //   if (atk && location.pathname !== '/login' && location.pathname !== '/') {
@@ -21,10 +19,12 @@ function App() {
           <Suspense fallback={<div><div className="loader-wrapper">
         <div className="lds-dual-ring"></div>
       </div></div>}>
+        <BrowserRouter>
           <Routes>
         <Route path="/" element={<Navigate to="/login" replace />} />
             <Route path="/login" element={<LoginPage />} />
           </Routes>
+        </BrowserRouter>
           </Suspense>
        
         </main>

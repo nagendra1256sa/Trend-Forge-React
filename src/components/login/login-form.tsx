@@ -1,4 +1,3 @@
-"use client";
 
 import React, { useState, useCallback, useEffect } from "react";
 import {
@@ -207,9 +206,7 @@ export default function LoginPage() {
             width: "50%",
             color: "white",
             px: 6,
-            borderTopRightRadius: "24px",
-            borderBottomRightRadius: "24px",
-            backgroundImage: "url('/assets/login-background.png')",
+            backgroundImage: "url('/login-background.png')",
             backgroundSize: "cover",
             backgroundPosition: "center",
             display: "flex",
