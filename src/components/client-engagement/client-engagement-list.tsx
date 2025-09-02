@@ -1,18 +1,12 @@
 'use client'
 
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo } from "react";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import { Card, Divider, Grid, TablePagination } from "@mui/material";
 import { ClientCards } from "../../global/cards";
 import { ClientEngagementListTable } from "./client-table";
 
-
-
-interface MenuItemClientPageProps {
-    name?: string;
-    sku?: string;
-};
 
 
 
@@ -28,7 +22,7 @@ interface MenuItemClientPageProps {
 //     });
 // }
 
-export function MenuItemClient({ name, sku }: MenuItemClientPageProps): React.JSX.Element {
+export function ClientList(): React.JSX.Element {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(25);
 
