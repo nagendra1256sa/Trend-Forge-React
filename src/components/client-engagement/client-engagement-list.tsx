@@ -6,6 +6,7 @@ import Stack from "@mui/material/Stack";
 import { Card, Divider, Grid, TablePagination } from "@mui/material";
 import { ClientCards } from "../../global/cards";
 import { ClientEngagementListTable } from "./client-table";
+import GlobalFilters from "../../global/filters";
 
 
 
@@ -25,6 +26,10 @@ import { ClientEngagementListTable } from "./client-table";
 export function ClientList(): React.JSX.Element {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(25);
+    const [search, setSearch] = useState("");
+    const [organization, setOrganization] = useState("");
+    const [status, setStatus] = useState("");
+    const [exportType, setExportType] = useState("");
 
     const clientData = [
         { count: 38, text: "All time Clients" },
@@ -33,53 +38,53 @@ export function ClientList(): React.JSX.Element {
         { count: 5, text: "Active Projects" },
     ];
 
-      const data = [
-  {
-    "clientId": "TC001",
-    "initials": "TS",
-    "organization": "Innovatech Dynamics",
-    "contactPerson": "Alice Johnson",
-    "assignedTo": "Alice Johnson",
-    "status": "Active",
-    "action": "Deactivate"
-  },
-  {
-    "clientId": "TC002",
-    "initials": "TS",
-    "organization": "Future Solutions",
-    "contactPerson": "Bob Smith",
-    "assignedTo": null,
-    "status": "Inactive",
-    "action": "Deactivate"
-  },
-  {
-    "clientId": "TC003",
-    "initials": "TS",
-    "organization": "GreenTech Industries",
-    "contactPerson": "Cathy Brown",
-    "assignedTo": "Cathy Brown",
-    "status": "Active",
-    "action": "Deactivate"
-  },
-  {
-    "clientId": "TC004",
-    "initials": "TS",
-    "organization": "NextGen Innovations",
-    "contactPerson": "David Lee",
-    "assignedTo": null,
-    "status": "Inactive",
-    "action": "Deactivate"
-  },
-  {
-    "clientId": "TC005",
-    "initials": "TS",
-    "organization": "Quantum Computing Co.",
-    "contactPerson": "Eva Green",
-    "assignedTo": null,
-    "status": "Active",
-    "action": "Deactivate"
-  }
-]
+    const data = [
+        {
+            "clientId": "TC001",
+            "initials": "TS",
+            "organization": "Innovatech Dynamics",
+            "contactPerson": "Alice Johnson",
+            "assignedTo": "Alice Johnson",
+            "status": "Active",
+            "action": "Deactivate"
+        },
+        {
+            "clientId": "TC002",
+            "initials": "TS",
+            "organization": "Future Solutions",
+            "contactPerson": "Bob Smith",
+            "assignedTo": null,
+            "status": "Inactive",
+            "action": "Deactivate"
+        },
+        {
+            "clientId": "TC003",
+            "initials": "TS",
+            "organization": "GreenTech Industries",
+            "contactPerson": "Cathy Brown",
+            "assignedTo": "Cathy Brown",
+            "status": "Active",
+            "action": "Deactivate"
+        },
+        {
+            "clientId": "TC004",
+            "initials": "TS",
+            "organization": "NextGen Innovations",
+            "contactPerson": "David Lee",
+            "assignedTo": null,
+            "status": "Inactive",
+            "action": "Deactivate"
+        },
+        {
+            "clientId": "TC005",
+            "initials": "TS",
+            "organization": "Quantum Computing Co.",
+            "contactPerson": "Eva Green",
+            "assignedTo": null,
+            "status": "Active",
+            "action": "Deactivate"
+        }
+    ]
 
     const handlePageChange = (event: unknown, newPage: number) => {
         setPage(newPage);
@@ -90,7 +95,16 @@ export function ClientList(): React.JSX.Element {
         setPage(0);
     };
 
-
+    const filteredRows = data.filter((row) => {
+        const matchesSearch =
+            row.clientId.toLowerCase().includes(search.toLowerCase()) ||
+            row.organization.toLowerCase().includes(search.toLowerCase());
+        const matchesOrg =
+            organization === "all" || row.organization === organization;
+        const matchesStatus =
+            status === "all" || row.status.toLowerCase() === status.toLowerCase();
+        return matchesSearch && matchesOrg && matchesStatus;
+    });
 
     const paginatedData = useMemo(() => {
         if (!data) return [];
@@ -147,7 +161,34 @@ export function ClientList(): React.JSX.Element {
                     <Card>
                         <Divider />
                         <Box>
-
+                            <Box sx={{ p: 2, display: "flex",
+                                 justifyContent: "flex-end", 
+                                 alignItems: "center", 
+                                 flexWrap: "wrap", 
+                                 gap: 2,
+                                 
+                                 }}>
+                                <GlobalFilters
+                                    search={search}
+                                    onSearch={setSearch}
+                                    organization={organization}
+                                    organizations={[
+                                        "Innovatech Dynamics",
+                                        "Future Solutions",
+                                        "GreenTech Industries",
+                                        "NextGen Innovations",
+                                        "Quantum Computing Co.",
+                                    ]}
+                                    onOrgChange={setOrganization}
+                                    status={status}
+                                    statuses={["Active", "Inactive"]}
+                                    onStatusChange={setStatus}
+                                    exportType={exportType}
+                                    exportOptions={["CSV", "Excel", "PDF"]}
+                                    onExport={setExportType}
+                                    searchPlaceholder="Search by client name/ ID"
+                                />
+                            </Box>
                             <ClientEngagementListTable rows={paginatedData} />
 
                             <TablePagination
